@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>畢展作品規劃表 v1.4</title>
+<style>
+  :root {
+    --blue-deep: #184f7f;
+    --blue-main: #2e7fbf;
+    --blue-mid: #4f9dd7;
+    --blue-light: #8bc7eb;
+    --blue-pale: #e7f4fb;
+    --blue-bg: #f3f9fd;
+    --white: #ffffff;
+    --text-dark: #15334d;
+    --text-mid: #265f8d;
+    --text-soft: #5b7e99;
+    --border: #a9d1ea;
+    --shadow: rgba(15, 62, 101, 0.12);
+    --success: #2f7d5c;
+    --danger: #c54b4b;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: linear-gradient(180deg, #f7fbff 0%, #edf6fc 100%);
+    color: var(--text-dark);
+    font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 18px 28px;
+    background: linear-gradient(135deg, #194f7c 0%, #2d79b6 55%, #4295d1 100%);
+    color: var(--white);
+    box-shadow: 0 6px 18px var(--shadow);
+  }
+
+  .header-left,
+  .header-right {
+    width: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .header-center {
+    flex: 1;
+    text-align: center;
+  }
+
+  .logo {
+    width: 92px;
+    height: 92px;
+    object-fit: contain;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.14);
+    border: 2px solid rgba(255,255,255,0.35);
+    padding: 6px;
+  }
+
+  .logo-fallback {
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.14);
+    border: 2px solid rgba(255,255,255,0.35);
+    font-size: 13px;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    margin-top: 6px;
+    font-size: 0.95rem;
+    opacity: 0.92;
+  }
+
+  .version-tag {
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.12);
+    font-weight: 700;
+  }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 28px;
+    background: #dcecf7;
+    border-bottom: 1px solid #b5d2e6;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+    opacity: 0.95;
+  }
+
+  .btn-primary {
+    background: var(--blue-deep);
+    color: var(--white);
+  }
+
+  .btn-secondary {
+    background: var(--white);
+    color: var(--blue-deep);
+    border: 2px solid var(--blue-main);
+  }
+
+  #load-input {
+    display: none;
+  }
+
+  .toolbar-note {
+    margin-left: auto;
+    font-size: 0.84rem;
+    color: var(--text-soft);
+  }
+
+  .main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 24px 28px 16px;
+    align-items: start;
+  }
+
+  .panel,
+  .card,
+  .note-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px var(--shadow);
+  }
+
+  .section-head {
+    padding: 14px 18px;
+    border-radius: 16px 16px 0 0;
+    background: linear-gradient(90deg, #1d5f96, #3284c4);
+    color: var(--white);
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+  }
+
+  .theme-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--blue-pale);
+    border-bottom: 1px solid #d5e8f5;
+  }
+
+  .theme-row span {
+    font-weight: 700;
+    color: var(--text-mid);
+    white-space: nowrap;
+  }
+
+  .theme-row input {
+    flex: 1;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    padding: 0 0 10px;
+  }
+
+  table.main-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1500px;
+  }
+
+  table.main-table thead tr {
+    background: linear-gradient(90deg, #3d8cc6, #79bee7);
+    color: var(--white);
+  }
+
+  table.main-table th,
+  table.main-table td {
+    border: 1px solid #c7dfef;
+    text-align: center;
+    vertical-align: top;
+  }
+
+  table.main-table th {
+    padding: 10px 8px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  table.main-table td {
+    padding: 8px 6px;
+    background: #fff;
+  }
+
+  table.main-table tbody tr:nth-child(even) td {
+    background: #f8fcff;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    border: 1px solid #b7d4e8;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font: inherit;
+    color: var(--text-dark);
+    background: #fff;
+    outline: none;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--blue-main);
+    box-shadow: 0 0 0 3px rgba(46, 127, 191, 0.12);
+  }
+
+  .col-name input { min-width: 88px; }
+  .col-period input { min-width: 88px; }
+  .col-medium input { min-width: 130px; }
+  .col-topic input { min-width: 130px; }
+
+  .materials-cell { min-width: 560px; padding: 6px !important; }
+  .funding-cell { min-width: 170px; padding: 6px !important; }
+
+  .mat-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .mat-table td {
+    border: none;
+    padding: 4px;
+    background: transparent !important;
+  }
+
+  .mat-head {
+    font-size: 0.74rem;
+    color: var(--text-mid);
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .mat-name { width: 40%; min-width: 200px; }
+  .mat-price { width: 20%; min-width: 110px; }
+  .mat-qty { width: 16%; min-width: 90px; }
+  .mat-subtotal { width: 18%; min-width: 100px; }
+  .mat-action { width: 6%; min-width: 52px; }
+  .mat-source { width: 100%; min-width: 130px; }
+
+  .readonly-money {
+    background: #eef7fd;
+    color: var(--blue-deep);
+    font-weight: 700;
+  }
+
+  .est-cost {
+    background: #fdf0f2 !important;
+    color: #7B1A2A;
+    font-weight: 800;
+    min-width: 110px;
+    white-space: nowrap;
+  }
+
+  .done-cell {
+    min-width: 78px;
+  }
+
+  .done-cell input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--blue-main);
+    cursor: pointer;
+  }
+
+  .icon-btn,
+  .add-row-btn,
+  .mini-btn {
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    font: inherit;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .icon-btn {
+    background: #fce9e9;
+    color: var(--danger);
+    width: 34px;
+    height: 34px;
+    font-weight: 800;
+  }
+
+  .icon-btn:hover {
+    background: #f8d8d8;
+  }
+
+  .mini-btn {
+    background: #edf6fc;
+    color: var(--blue-deep);
+    padding: 6px 10px;
+    border: 1px dashed #8abfe2;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .mini-btn:hover,
+  .add-row-btn:hover {
+    background: #dceef9;
+  }
+
+  .add-row-btn {
+    width: calc(100% - 24px);
+    margin: 0 12px 14px;
+    padding: 11px 14px;
+    background: var(--blue-pale);
+    color: var(--blue-deep);
+    border: 1.5px dashed var(--blue-main);
+    font-weight: 800;
+  }
+
+  .right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px var(--shadow);
+  }
+
+  .stat-head {
+    padding: 11px 14px;
+    color: var(--white);
+    font-weight: 800;
+    letter-spacing: 0.5px;
+  }
+
+  .stat-head.total { background: linear-gradient(90deg, #184f7f, #2f79b6); }
+  .stat-head.buffer { background: linear-gradient(90deg, #2f79b6, #52a0d9); }
+  .stat-head.class-fee { background: linear-gradient(90deg, #2c6b97, #4a9dd2); }
+  .stat-head.claim { background: linear-gradient(90deg, #206f86, #3ca4c3); }
+  .stat-head.other { background: linear-gradient(90deg, #387b5e, #53a17f); }
+
+  .stat-body {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .stat-value {
+    text-align: center;
+    font-size: 1.65rem;
+    font-weight: 900;
+    color: var(--blue-deep);
+  }
+
+  #total-display {
+    color: #7B1A2A;
+  }
+
+  .stat-label {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--text-soft);
+    line-height: 1.5;
+  }
+
+  .ratio-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--text-soft);
+  }
+
+  .ratio-row input {
+    width: 80px;
+    text-align: center;
+  }
+
+  .bottom-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 0 28px 28px;
+  }
+
+  .card-body {
+    padding: 16px;
+  }
+
+  .param-grid,
+  .schedule-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .param-row,
+  .schedule-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .param-row .label {
+    min-width: 110px;
+    color: var(--text-mid);
+    font-weight: 700;
+  }
+
+  .toolbar-inline {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .schedule-row input:first-child {
+    width: 90px;
+  }
+
+  .schedule-row input:nth-child(2) {
+    flex: 1;
+  }
+
+  .schedule-row input:nth-child(3) {
+    width: 100px;
+  }
+
+  textarea {
+    min-height: 130px;
+    resize: vertical;
+    line-height: 1.6;
+  }
+
+  /* ── DASHBOARD ── */
+  .dashboard {
+    margin: 0 28px 20px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--white);
+    box-shadow: 0 8px 24px var(--shadow);
+    overflow: hidden;
+  }
+
+  .dash-section-head {
+    padding: 12px 18px;
+    background: linear-gradient(90deg, #1d5f96, #3284c4);
+    color: var(--white);
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+  }
+
+  .dash-upper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dash-pie-card {
+    padding: 16px 20px;
+  }
+
+  .dash-pie-card:first-child {
+    border-right: 1px solid var(--border);
+  }
+
+  .dash-card-head {
+    font-weight: 800;
+    font-size: 0.88rem;
+    color: var(--text-mid);
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .pie-wrap {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .pie-legend {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .pie-legend-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.76rem;
+  }
+
+  .pie-swatch {
+    width: 13px;
+    height: 13px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .pie-legend-label { flex: 1; color: var(--text-dark); }
+  .pie-legend-amt { font-weight: 700; color: #7B1A2A; white-space: nowrap; }
+
+  .dash-lower {
+    display: grid;
+    grid-template-columns: 2fr 2fr 2fr 1fr 1fr 1fr;
+  }
+
+  .dash-stat-card {
+    padding: 14px 12px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+  }
+
+  .dash-stat-card:last-child { border-right: none; }
+
+  .dash-stat-head {
+    padding: 7px 10px;
+    border-radius: 8px;
+    color: var(--white);
+    font-weight: 800;
+    font-size: 0.85rem;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+
+  .dash-stat-head.total   { background: linear-gradient(90deg, #184f7f, #2f79b6); }
+  .dash-stat-head.buffer  { background: linear-gradient(90deg, #2f79b6, #52a0d9); }
+  .dash-stat-head.class-fee { background: linear-gradient(90deg, #2c6b97, #4a9dd2); }
+  .dash-stat-head.claim   { background: linear-gradient(90deg, #206f86, #3ca4c3); }
+  .dash-stat-head.other   { background: linear-gradient(90deg, #387b5e, #53a17f); }
+
+  .dash-big-value {
+    text-align: center;
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: var(--blue-deep);
+  }
+
+  .dash-sub-label {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--text-soft);
+    line-height: 1.4;
+  }
+
+  .detail-list {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 200px;
+    border: 1px solid #d5e8f5;
+    border-radius: 8px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 4px;
+  }
+
+  .detail-row {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    font-size: 0.74rem;
+    padding: 3px 5px;
+    border-radius: 4px;
+    background: #f5fafd;
+  }
+
+  .detail-row:nth-child(even) { background: #eef6fb; }
+  .detail-work { font-weight: 700; color: var(--text-dark); white-space: nowrap; flex-shrink: 0; }
+  .detail-mat  { color: var(--text-soft); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .detail-amt  { font-weight: 700; color: #7B1A2A; white-space: nowrap; flex-shrink: 0; }
+
+  .detail-empty { text-align: center; color: var(--text-soft); font-size: 0.75rem; padding: 14px 0; }
+
+  @media (max-width: 1080px) {
+    .main,
+    .bottom-section {
+      grid-template-columns: 1fr;
+    }
+
+    .toolbar-note {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-left">
+    <img src="001.png" alt="Logo" class="logo" onerror="this.style.display='none';document.getElementById('logo-fallback').style.display='flex';">
+    <div class="logo-fallback" id="logo-fallback">LOGO<br>預留</div>
+  </div>
+  <div class="header-center">
+    <h1>畢展作品規劃表</h1>
+    <div class="subtitle">作品、材料、經費來源與展示方式整合管理</div>
+  </div>
+  <div class="header-right">
+    <div class="version-tag">Version1.4</div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <button class="btn btn-primary" onclick="saveJSON()">儲存 JSON</button>
+  <button class="btn btn-secondary" onclick="document.getElementById('load-input').click()">讀取 JSON</button>
+  <input type="file" id="load-input" accept=".json" onchange="loadJSON(event)">
+  <span class="toolbar-note">可匯出目前資料，之後再匯入繼續編輯。</span>
+</div>
+
+<div class="main">
+  <div class="panel">
+    <div class="section-head">畢展作品規劃表</div>
+    <div class="theme-row">
+      <span>主題方向</span>
+      <input type="text" id="theme-input" value="請輸入畢展主題、媒材方向或作品概念">
+    </div>
+    <div class="table-wrap">
+      <table class="main-table">
+        <thead>
+          <tr>
+            <th>作品</th>
+            <th>學期</th>
+            <th>媒材</th>
+            <th>主題</th>
+            <th class="materials-cell">購買材料（名稱 / 單價 / 數量）</th>
+            <th>預估費用</th>
+            <th class="funding-cell">經費來源</th>
+            <th>裱框方式</th>
+            <th>裱框費用</th>
+            <th>完成?</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+    <button class="add-row-btn" onclick="addRow()">＋ 新增作品</button>
+  </div>
+
+</div>
+
+<!-- ══════════════════ DASHBOARD ══════════════════ -->
+<div class="dashboard">
+  <div class="dash-section-head">📊 經費 Dashboard</div>
+
+  <!-- 上半：圓餅圖 -->
+  <div class="dash-upper">
+    <div class="dash-pie-card">
+      <div class="dash-card-head">支出圓餅圖（前三大作品）</div>
+      <div class="pie-wrap">
+        <canvas id="expense-pie" width="180" height="180"></canvas>
+        <div id="expense-legend" class="pie-legend"></div>
+      </div>
+    </div>
+    <div class="dash-pie-card">
+      <div class="dash-card-head">收入圓餅圖（班費 / 請款費用 / 其他）</div>
+      <div class="pie-wrap">
+        <canvas id="income-pie" width="180" height="180"></canvas>
+        <div id="income-legend" class="pie-legend"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 下半：6 張卡片 -->
+  <div class="dash-lower">
+
+    <!-- 總經費預估 -->
+    <div class="dash-stat-card">
+      <div class="dash-stat-head total">總經費預估</div>
+      <div class="dash-big-value" id="total-display" style="color:#7B1A2A;">$0</div>
+      <div class="dash-sub-label">材料＋裱框費用合計</div>
+      <div class="detail-list" id="total-detail"></div>
+    </div>
+
+    <!-- 班費 -->
+    <div class="dash-stat-card">
+      <div class="dash-stat-head class-fee">班費</div>
+      <input type="number" id="class-fee-input" placeholder="班費總額" oninput="recalc();">
+      <div class="dash-sub-label">班費總額（手動填入）</div>
+      <div class="dash-big-value" id="class-fee-balance">$0</div>
+      <div class="dash-sub-label" id="class-fee-note">餘額</div>
+      <div class="detail-list" id="class-fee-detail"></div>
+    </div>
+
+    <!-- 請款費用 -->
+    <div class="dash-stat-card">
+      <div class="dash-stat-head claim">請款費用</div>
+      <input type="number" id="claim-input" placeholder="請款費用總額" oninput="recalc();">
+      <div class="dash-sub-label">請款費用總額（手動填入）</div>
+      <div class="dash-big-value" id="claim-balance">$0</div>
+      <div class="dash-sub-label" id="claim-note">餘額</div>
+      <div class="detail-list" id="claim-detail"></div>
+    </div>
+
+    <!-- 其他 -->
+    <div class="dash-stat-card">
+      <div class="dash-stat-head other">其他</div>
+      <input type="number" id="other-input" placeholder="其他費用總額" oninput="recalc();">
+      <div class="dash-sub-label">其他總額（手動填入）</div>
+      <div class="dash-big-value" id="other-balance">$0</div>
+      <div class="dash-sub-label" id="other-note">餘額</div>
+    </div>
+
+    <!-- 備用金 -->
+    <div class="dash-stat-card">
+      <div class="dash-stat-head buffer">備用金</div>
+      <div class="ratio-row" style="flex-wrap:wrap;gap:4px;">
+        <span>比例</span>
+        <input type="number" id="buffer-ratio" value="0.05" step="0.01" min="0" max="1" oninput="if(!bufferManual) recalc();" style="width:60px;text-align:center;">
+        <span>× 總經費</span>
+      </div>
+      <input type="number" id="buffer-input" placeholder="或直接輸入金額" oninput="bufferManual=true; recalc();">
+      <div class="dash-sub-label">未輸入時依比例自動計算</div>
+    </div>
+
+    <!-- 結餘 -->
+    <div class="dash-stat-card">
+      <div class="dash-stat-head total">結餘</div>
+      <div class="dash-big-value" id="balance-display">$0</div>
+      <div class="dash-sub-label" id="balance-note">班費＋請款費用＋其他－總預估－備用金</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="bottom-section">
+  <div class="note-card">
+    <div class="section-head">學校經費與外聘課程</div>
+    <div class="card-body">
+      <div class="param-grid" id="params-grid"></div>
+      <div class="toolbar-inline">
+        <button class="mini-btn" onclick="addParamBudget()">＋ 新增經費</button>
+        <button class="mini-btn" onclick="addParamOutsource()">＋ 新增外聘課程</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-card">
+    <div class="section-head">課程與備註</div>
+    <div class="card-body">
+      <div class="schedule-list" id="schedule-list"></div>
+      <div class="toolbar-inline">
+        <button class="mini-btn" onclick="addSchedRow()">＋ 新增課程</button>
+      </div>
+      <div style="margin-top:14px;">
+        <textarea id="notes-area" placeholder="可記錄佈展提醒、截止日期、特殊需求等。">6上 12月-1月拍照（人像＋作品）
+4月完成畫冊印製＋邀請卡＋海報</textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let bufferManual = false;
+
+const defaultRows = [
+  { name:"作品1", period:"3下", medium:"皮革-盤", topic:"", materials:[{n:"",p:"",q:"",src:""}], frame:"展板", frameCost:"", done:true },
+  { name:"作品2", period:"3下", medium:"皮革-微景", topic:"", materials:[{n:"",p:"",q:"",src:""}], frame:"玻璃罩", frameCost:"", done:true },
+  { name:"作品3", period:"4下", medium:"石膏雕塑（外聘）", topic:"不一樣的我", materials:[{n:"",p:"",q:"",src:""}], frame:"", frameCost:"", done:false },
+  { name:"作品4", period:"4下", medium:"酒瓶彩繪", topic:"酒瓶燈", materials:[{n:"",p:"",q:"",src:""}], frame:"", frameCost:"", done:false },
+  { name:"作品5", period:"4下", medium:"素描+色鉛筆", topic:"我的代表物", materials:[{n:"",p:"",q:"",src:""}], frame:"框", frameCost:"", done:false },
+  { name:"作品6", period:"5上", medium:"藍染（外聘）", topic:"方巾", materials:[{n:"",p:"",q:"",src:""}], frame:"裱板", frameCost:"", done:false },
+  { name:"作品7", period:"5上", medium:"俄羅斯刺繡", topic:"", materials:[{n:"",p:"",q:"",src:""}], frame:"", frameCost:"", done:false },
+  { name:"作品8", period:"5上", medium:"線材 String Art", topic:"眼睛", materials:[{n:"",p:"",q:"",src:""}], frame:"", frameCost:"", done:false },
+  { name:"作品9", period:"5上", medium:"藍晒", topic:"", materials:[{n:"",p:"",q:"",src:""}], frame:"", frameCost:"", done:false },
+  { name:"作品10", period:"5下", medium:"漆藝（外聘）", topic:"奇異植物", materials:[{n:"漆板",p:"",q:"",src:""}], frame:"", frameCost:"", done:false },
+  { name:"作品11", period:"5下6上", medium:"美展", topic:"", materials:[{n:"",p:"",q:"",src:""}], frame:"框", frameCost:"", done:false },
+  { name:"作品12", period:"5下6上", medium:"版畫", topic:"", materials:[{n:"針刻板",p:"",q:"",src:""}], frame:"框", frameCost:"", done:false },
+  { name:"作品13", period:"5下", medium:"陶藝", topic:"建築/盆栽", materials:[{n:"盆栽",p:"",q:"",src:""},{n:"白瓷土",p:"",q:"",src:""}], frame:"", frameCost:"", done:false },
+  { name:"作品14", period:"六上", medium:"羊毛氈", topic:"", materials:[{n:"",p:"",q:"",src:""}], frame:"", frameCost:"", done:false },
+  { name:"作品15", period:"5下6上", medium:"集體創作", topic:"", materials:[{n:"",p:"",q:"",src:""}], frame:"", frameCost:"", done:false },
+  { name:"作品16", period:"6上", medium:"書法", topic:"", materials:[{n:"",p:"",q:"",src:""}], frame:"", frameCost:"", done:false },
+  { name:"作品17", period:"6上", medium:"科技錄像（外聘）", topic:"奇藝島", materials:[{n:"",p:"",q:"",src:""}], frame:"", frameCost:"", done:false },
+  { name:"作品18", period:"3-6", medium:"假日作業", topic:"", materials:[{n:"",p:"",q:"",src:""}], frame:"冷裱", frameCost:"", done:false }
+];
+
+const defaultParams = [
+  { label:"五下 學校經費", value:"30000", unit:"元", type:"budget" },
+  { label:"六上 學校經費", value:"30000", unit:"元", type:"budget" },
+  { label:"外聘課程-石膏雕塑", value:"12", unit:"hr", type:"outsource" },
+  { label:"外聘課程-藍染", value:"6", unit:"hr", type:"outsource" },
+  { label:"外聘課程-漆藝", value:"6", unit:"hr", type:"outsource" },
+  { label:"外聘課程-針刻版畫（五下）", value:"17", unit:"hr（4場×3h＋1場×5h）", type:"outsource" },
+  { label:"外聘課程-貳進科技（六上）", value:"12", unit:"hr（3場×4h，共3人）", type:"outsource" }
+];
+
+const defaultSchedule = [
+  { phase:"五下", content:"確認作品方向與媒材", hours:"" },
+  { phase:"六上", content:"整理材料、完成作品與展示準備", hours:"" },
+  { phase:"六下", content:"舞蹈", hours:"" }
+];
+
+let rows = normalizeRows(JSON.parse(JSON.stringify(defaultRows)));
+let params = JSON.parse(JSON.stringify(defaultParams));
+let schedule = JSON.parse(JSON.stringify(defaultSchedule));
+
+function normalizeMaterial(material) {
+  const source = material && ["班費", "請款費用", "其他"].includes(material.src) ? material.src : "";
+  return {
+    n: material?.n ?? "",
+    p: material?.p ?? "",
+    q: material?.q ?? "",
+    src: source
+  };
+}
+
+function normalizeRow(row) {
+  const materials = Array.isArray(row?.materials) && row.materials.length ? row.materials.map(normalizeMaterial) : [normalizeMaterial({})];
+  return {
+    name: row?.name ?? "",
+    period: row?.period ?? "",
+    medium: row?.medium ?? "",
+    topic: row?.topic ?? "",
+    materials,
+    frame: row?.frame ?? "",
+    frameCost: row?.frameCost ?? "",
+    done: Boolean(row?.done)
+  };
+}
+
+function normalizeRows(list) {
+  return (list || []).map(normalizeRow);
+}
+
+function money(value) {
+  return Number(value || 0).toLocaleString("zh-TW");
+}
+
+function materialSubtotal(material) {
+  return (parseFloat(material.p) || 0) * (parseFloat(material.q) || 0);
+}
+
+function rowCost(row) {
+  const materialsTotal = row.materials.reduce((sum, material) => sum + materialSubtotal(material), 0);
+  return materialsTotal + (parseFloat(row.frameCost) || 0);
+}
+
+function totalCost() {
+  return rows.reduce((sum, row) => sum + rowCost(row), 0);
+}
+
+function getFundingTotals() {
+  const totals = { "班費": 0, "請款費用": 0, "其他": 0 };
+  const counts = { "班費": 0, "請款費用": 0, "其他": 0 };
+
+  rows.forEach(row => {
+    row.materials.forEach(material => {
+      if (!totals.hasOwnProperty(material.src)) return;
+      totals[material.src] += materialSubtotal(material);
+      counts[material.src] += 1;
+    });
+  });
+
+  return { totals, counts };
+}
+
+function renderTable() {
+  const tbody = document.getElementById("table-body");
+  tbody.innerHTML = "";
+  rows.forEach((row, ri) => tbody.appendChild(buildRow(row, ri)));
+}
+
+function buildRow(row, ri) {
+  const tr = document.createElement("tr");
+  tr.dataset.ri = ri;
+  tr.innerHTML = `
+    <td class="col-name"><input type="text" value="${esc(row.name)}" oninput="updateRow(${ri}, 'name', this.value)"></td>
+    <td class="col-period"><input type="text" value="${esc(row.period)}" oninput="updateRow(${ri}, 'period', this.value)"></td>
+    <td class="col-medium"><input type="text" value="${esc(row.medium)}" oninput="updateRow(${ri}, 'medium', this.value)"></td>
+    <td class="col-topic"><input type="text" value="${esc(row.topic)}" oninput="updateRow(${ri}, 'topic', this.value)"></td>
+    <td class="materials-cell">${renderMaterials(row, ri)}</td>
+    <td class="est-cost" id="est-${ri}">$${money(rowCost(row))}</td>
+    <td class="funding-cell">${renderFundingSources(row, ri)}</td>
+    <td><input type="text" value="${esc(row.frame)}" oninput="updateRow(${ri}, 'frame', this.value)"></td>
+    <td><input type="number" value="${esc(row.frameCost)}" placeholder="0" oninput="updateRow(${ri}, 'frameCost', this.value)"></td>
+    <td class="done-cell"><input type="checkbox" ${row.done ? "checked" : ""} onchange="updateRow(${ri}, 'done', this.checked)"></td>
+    <td><button class="icon-btn" onclick="deleteRow(${ri})" title="刪除作品">✕</button></td>
+  `;
+  return tr;
+}
+
+function renderMaterials(row, ri) {
+  let html = `
+    <table class="mat-table">
+      <thead>
+        <tr>
+          <td class="mat-head mat-name">材料名稱</td>
+          <td class="mat-head mat-price">單價</td>
+          <td class="mat-head mat-qty">數量</td>
+          <td class="mat-head mat-subtotal">小計</td>
+          <td class="mat-head mat-action"></td>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  row.materials.forEach((material, mi) => {
+    html += `
+      <tr>
+        <td class="mat-name"><input type="text" value="${esc(material.n)}" placeholder="材料名稱" oninput="updateMat(${ri}, ${mi}, 'n', this.value)"></td>
+        <td class="mat-price"><input type="number" value="${esc(material.p)}" placeholder="單價" oninput="updateMat(${ri}, ${mi}, 'p', this.value)"></td>
+        <td class="mat-qty"><input type="number" value="${esc(material.q)}" placeholder="數量" oninput="updateMat(${ri}, ${mi}, 'q', this.value)"></td>
+        <td class="mat-subtotal"><input class="readonly-money" type="text" value="${materialSubtotal(material) ? "$" + money(materialSubtotal(material)) : ""}" readonly tabindex="-1"></td>
+        <td class="mat-action"><button class="icon-btn" onclick="deleteMat(${ri}, ${mi})" title="刪除材料">✕</button></td>
+      </tr>
+    `;
+  });
+
+  html += `
+      </tbody>
+    </table>
+    <button class="mini-btn" onclick="addMat(${ri})">＋ 材料</button>
+  `;
+  return html;
+}
+
+function renderFundingSources(row, ri) {
+  let html = `
+    <table class="mat-table">
+      <thead>
+        <tr><td class="mat-head mat-source">經費來源</td></tr>
+      </thead>
+      <tbody>
+  `;
+
+  row.materials.forEach((material, mi) => {
+    html += `
+      <tr>
+        <td class="mat-source">
+          <select onchange="updateMat(${ri}, ${mi}, 'src', this.value)">
+            <option value="" ${material.src === "" ? "selected" : ""}>請選擇</option>
+            <option value="班費" ${material.src === "班費" ? "selected" : ""}>班費</option>
+            <option value="請款費用" ${material.src === "請款費用" ? "selected" : ""}>請款費用</option>
+            <option value="其他" ${material.src === "其他" ? "selected" : ""}>其他</option>
+          </select>
+        </td>
+      </tr>
+    `;
+  });
+
+  html += `
+      </tbody>
+    </table>
+  `;
+  return html;
+}
+
+function refreshRow(ri) {
+  const row = rows[ri];
+  const tr = document.querySelector(`tr[data-ri="${ri}"]`);
+  if (!tr || !row) return;
+
+  const newTr = buildRow(row, ri);
+  tr.replaceWith(newTr);
+}
+
+function refreshCost(ri) {
+  const el = document.getElementById(`est-${ri}`);
+  if (el) el.textContent = `$${money(rowCost(rows[ri]))}`;
+}
+
+function updateRow(ri, field, value) {
+  rows[ri][field] = value;
+  refreshCost(ri);
+  recalc();
+}
+
+function updateMat(ri, mi, field, value) {
+  rows[ri].materials[mi][field] = value;
+  if (field === "p" || field === "q") {
+    const sub = materialSubtotal(rows[ri].materials[mi]);
+    const tr = document.querySelector(`tr[data-ri="${ri}"]`);
+    if (tr) {
+      const matRows = tr.querySelectorAll(".mat-table tbody tr");
+      if (matRows[mi]) {
+        const subInput = matRows[mi].querySelector(".readonly-money");
+        if (subInput) subInput.value = sub > 0 ? "$" + money(sub) : "";
+      }
+    }
+    refreshCost(ri);
+  } else if (field === "src") {
+    refreshRow(ri);
+  }
+  recalc();
+}
+
+function addMat(ri) {
+  rows[ri].materials.push(normalizeMaterial({}));
+  refreshRow(ri);
+  recalc();
+}
+
+function deleteMat(ri, mi) {
+  rows[ri].materials.splice(mi, 1);
+  if (!rows[ri].materials.length) rows[ri].materials.push(normalizeMaterial({}));
+  refreshRow(ri);
+  recalc();
+}
+
+function addRow() {
+  rows.push(normalizeRow({
+    name: `作品${rows.length + 1}`,
+    period: "",
+    medium: "",
+    topic: "",
+    materials: [normalizeMaterial({})],
+    frame: "",
+    frameCost: "",
+    done: false
+  }));
+  renderTable();
+  recalc();
+}
+
+function deleteRow(ri) {
+  rows.splice(ri, 1);
+  renderTable();
+  recalc();
+}
+
+// ── 圓餅圖顏色 ──
+const PIE_EXPENSE = ["#7B1A2A", "#C05070", "#E8909A", "#BBBBBB"];
+const PIE_INCOME  = ["#2d79b6", "#387b5e", "#8B6914"];
+
+function drawPie(canvasId, legendId, segments) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  const cx = W / 2, cy = H / 2, r = Math.min(W, H) / 2 - 6;
+  ctx.clearRect(0, 0, W, H);
+
+  const total = segments.reduce((s, g) => s + g.value, 0);
+  const legendEl = document.getElementById(legendId);
+
+  if (total === 0) {
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+    ctx.fillStyle = "#dde"; ctx.fill();
+    if (legendEl) legendEl.innerHTML = `<div class="pie-legend-row" style="color:#aaa;">尚無資料</div>`;
+    return;
+  }
+
+  let angle = -Math.PI / 2;
+  segments.forEach(seg => {
+    const slice = (seg.value / total) * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, angle, angle + slice);
+    ctx.closePath();
+    ctx.fillStyle = seg.color;
+    ctx.fill();
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    angle += slice;
+  });
+
+  if (legendEl) {
+    legendEl.innerHTML = segments.map(seg => `
+      <div class="pie-legend-row">
+        <span class="pie-swatch" style="background:${seg.color}"></span>
+        <span class="pie-legend-label">${esc(seg.label)}</span>
+        <span class="pie-legend-amt">$${money(seg.value)}</span>
+      </div>`).join("");
+  }
+}
+
+function updateExpensePie() {
+  const sorted = rows
+    .map(row => ({ label: row.name || "（未命名）", value: rowCost(row) }))
+    .filter(r => r.value > 0)
+    .sort((a, b) => b.value - a.value);
+  const top3 = sorted.slice(0, 3);
+  const rest = sorted.slice(3).reduce((s, r) => s + r.value, 0);
+  const segs = top3.map((r, i) => ({ label: r.label, value: r.value, color: PIE_EXPENSE[i] }));
+  if (rest > 0) segs.push({ label: "其他", value: rest, color: PIE_EXPENSE[3] });
+  drawPie("expense-pie", "expense-legend", segs);
+}
+
+function updateIncomePie() {
+  const cf = parseFloat(document.getElementById("class-fee-input").value) || 0;
+  const cl = parseFloat(document.getElementById("claim-input").value) || 0;
+  const ot = parseFloat(document.getElementById("other-input").value) || 0;
+  const segs = [
+    { label: "班費",     value: cf, color: PIE_INCOME[0] },
+    { label: "請款費用", value: cl, color: PIE_INCOME[1] },
+    { label: "其他",     value: ot, color: PIE_INCOME[2] }
+  ].filter(s => s.value > 0);
+  drawPie("income-pie", "income-legend", segs);
+}
+
+function renderDetailList(containerId, items) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (!items.length) { el.innerHTML = `<div class="detail-empty">無細項</div>`; return; }
+  el.innerHTML = items.map(it => `
+    <div class="detail-row">
+      <span class="detail-work">${esc(it.work)}</span>
+      <span class="detail-mat">${esc(it.mat)}</span>
+      <span class="detail-amt">$${money(it.amt)}</span>
+    </div>`).join("");
+}
+
+function updateDashboardDetails() {
+  // 總經費預估：每個作品合計
+  const totalItems = rows
+    .filter(row => rowCost(row) > 0)
+    .map(row => ({ work: row.name, mat: row.medium || "", amt: rowCost(row) }));
+  renderDetailList("total-detail", totalItems);
+
+  // 班費 / 請款費用：各材料細項
+  const cfItems = [], clItems = [];
+  rows.forEach(row => {
+    row.materials.forEach(mat => {
+      const sub = materialSubtotal(mat);
+      if (sub <= 0) return;
+      const entry = { work: row.name, mat: mat.n || "（未命名）", amt: sub };
+      if (mat.src === "班費")     cfItems.push(entry);
+      if (mat.src === "請款費用") clItems.push(entry);
+    });
+  });
+  renderDetailList("class-fee-detail", cfItems);
+  renderDetailList("claim-detail", clItems);
+}
+
+function recalc() {
+  const total = totalCost();
+  document.getElementById("total-display").textContent = `$${money(total)}`;
+
+  if (!bufferManual) {
+    const ratio = parseFloat(document.getElementById("buffer-ratio").value) || 0;
+    document.getElementById("buffer-input").value = Math.round(total * ratio);
+  }
+
+  const buffer = parseFloat(document.getElementById("buffer-input").value) || 0;
+  const { totals, counts } = getFundingTotals();
+
+  const classFeeInput = parseFloat(document.getElementById("class-fee-input").value) || 0;
+  const claimInput    = parseFloat(document.getElementById("claim-input").value)    || 0;
+  const otherInput    = parseFloat(document.getElementById("other-input").value)    || 0;
+
+  function setBalance(balId, noteId, budget, used, count) {
+    const bal = budget - used;
+    const el = document.getElementById(balId);
+    el.textContent = `$${money(bal)}`;
+    el.style.color = bal >= 0 ? "var(--success)" : "var(--danger)";
+    document.getElementById(noteId).textContent =
+      `餘額（已用 $${money(used)}，共 ${count} 項材料）`;
+  }
+
+  setBalance("class-fee-balance", "class-fee-note", classFeeInput, totals["班費"],     counts["班費"]);
+  setBalance("claim-balance",     "claim-note",     claimInput,    totals["請款費用"], counts["請款費用"]);
+  setBalance("other-balance",     "other-note",     otherInput,    totals["其他"],     counts["其他"]);
+
+  const balance = classFeeInput + claimInput + otherInput - total - buffer;
+  const balanceDisplay = document.getElementById("balance-display");
+  balanceDisplay.textContent = `$${money(balance)}`;
+  balanceDisplay.style.color = balance >= 0 ? "var(--success)" : "var(--danger)";
+
+  document.getElementById("balance-note").textContent =
+    `班費 $${money(classFeeInput)} ＋ 請款費用 $${money(claimInput)} ＋ 其他 $${money(otherInput)} － 總預估 $${money(total)} － 備用金 $${money(buffer)}`;
+
+  updateExpensePie();
+  updateIncomePie();
+  updateDashboardDetails();
+}
+
+function renderParams() {
+  const grid = document.getElementById("params-grid");
+  grid.innerHTML = "";
+
+  params.forEach((param, index) => {
+    const row = document.createElement("div");
+    row.className = "param-row";
+    row.innerHTML = `
+      <input class="label" type="text" value="${esc(param.label)}" oninput="params[${index}].label=this.value; syncParamsToSchedule();">
+      <input type="text" value="${esc(param.value)}" oninput="params[${index}].value=this.value; syncParamsToSchedule();">
+      <input type="text" value="${esc(param.unit)}" oninput="params[${index}].unit=this.value; syncParamsToSchedule();">
+      <button class="icon-btn" onclick="delParam(${index})">✕</button>
+    `;
+    grid.appendChild(row);
+  });
+}
+
+function addParamBudget() {
+  params.push({ label: "新增經費", value: "", unit: "元", type: "budget" });
+  renderParams();
+  syncParamsToSchedule();
+}
+
+function addParamOutsource() {
+  params.push({ label: "外聘課程-新項目", value: "", unit: "hr", type: "outsource" });
+  renderParams();
+  syncParamsToSchedule();
+}
+
+function delParam(index) {
+  params.splice(index, 1);
+  renderParams();
+  syncParamsToSchedule();
+}
+
+function syncParamsToSchedule() {
+  const manualRows = schedule.filter(item => !item._fromParam);
+  const syncRows = params
+    .filter(param => param.type === "outsource" || param.label.includes("外聘"))
+    .map(param => {
+      const parts = String(param.label).split("-");
+      return {
+        phase: "外聘",
+        content: parts.length > 1 ? parts.slice(1).join("-") : param.label,
+        hours: param.value ? `${param.value}${param.unit || ""}` : "",
+        _fromParam: true
+      };
+    });
+
+  schedule = manualRows.concat(syncRows);
+  renderSchedule();
+}
+
+function renderSchedule() {
+  const list = document.getElementById("schedule-list");
+  list.innerHTML = "";
+
+  schedule.forEach((item, index) => {
+    const row = document.createElement("div");
+    row.className = "schedule-row";
+    row.innerHTML = `
+      <input type="text" value="${esc(item.phase)}" placeholder="階段" oninput="schedule[${index}].phase=this.value;">
+      <input type="text" value="${esc(item.content)}" placeholder="內容" oninput="schedule[${index}].content=this.value;">
+      <input type="text" value="${esc(item.hours)}" placeholder="時數" oninput="schedule[${index}].hours=this.value;">
+      <button class="icon-btn" onclick="delSchedRow(${index})">✕</button>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function addSchedRow() {
+  schedule.push({ phase: "", content: "", hours: "" });
+  renderSchedule();
+}
+
+function delSchedRow(index) {
+  schedule.splice(index, 1);
+  renderSchedule();
+}
+
+async function saveJSON() {
+  const data = {
+    theme: document.getElementById("theme-input").value,
+    rows,
+    params,
+    schedule,
+    bufferRatio: document.getElementById("buffer-ratio").value,
+    bufferInput: document.getElementById("buffer-input").value,
+    notes: document.getElementById("notes-area").value
+  };
+
+  const now = new Date();
+  const pad = n => String(n).padStart(2, "0");
+  const filename = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}.json`;
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+
+  if (window.showSaveFilePicker) {
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: filename,
+        types: [{ description: "JSON 檔案", accept: { "application/json": [".json"] } }]
+      });
+      const writable = await handle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+    } catch (e) {
+      if (e.name !== "AbortError") alert("儲存失敗：" + e.message);
+    }
+  } else {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+  }
+}
+
+function loadJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.theme !== undefined) document.getElementById("theme-input").value = data.theme;
+      if (data.rows) rows = normalizeRows(data.rows);
+      if (data.params) params = data.params;
+      if (data.schedule) schedule = data.schedule;
+      if (data.bufferRatio !== undefined) document.getElementById("buffer-ratio").value = data.bufferRatio;
+      if (data.bufferInput !== undefined) {
+        document.getElementById("buffer-input").value = data.bufferInput;
+        bufferManual = true;
+      }
+      if (data.notes !== undefined) document.getElementById("notes-area").value = data.notes;
+
+      renderTable();
+      renderParams();
+      syncParamsToSchedule();
+      recalc();
+      alert(`已成功讀取：${file.name}`);
+    } catch (error) {
+      alert(`讀取失敗：${error.message}`);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = "";
+}
+
+function esc(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+renderTable();
+renderParams();
+syncParamsToSchedule();
+recalc();
+</script>
+</body>
+</html>
